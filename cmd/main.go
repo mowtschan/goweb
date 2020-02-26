@@ -38,7 +38,7 @@ func handler(c echo.Context) error {
 	if err := c.Bind(data); err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	outputFile := os.Getenv(os.Getenv(envOutputFile))
+	outputFile := os.Getenv(envOutputFile)
 	if outputFile == "" {
 		outputFile = "/tmp/payload.json"
 	}
@@ -49,5 +49,6 @@ func handler(c echo.Context) error {
 	if err := ioutil.WriteFile(outputFile, content.Bytes(), 0777); err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
+	c.Logger().Infof("wrote payload to the file %q", outputFile)
 	return c.JSON(http.StatusOK, data)
 }
